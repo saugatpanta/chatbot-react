@@ -1,0 +1,368 @@
+<!-- <!DOCTYPE html>
+<html lang="XML">
+  <head>
+    <title>React Basics</title>
+  </head>
+  <body>
+
+    <!-- React = external library that helps us create websites
+    1. React is an external library
+    2. React helps us create websites easier
+    -->
+    <div class="js-container"></div>
+    
+    <script src="react-basics.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <!--Babel = JavasScript Compiler
+    = Translate other languages (JSX) into JS
+    JSX = Enhanced Version of js and stands for JS XML'
+
+    -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+    <script src="chatbot-response.js"></script>
+
+    <script type="text/babel">
+
+      const button = <button>Good Job!</button>;
+      const param = <p>My name is Simon</p>;
+
+      const todayDate = dayjs().format('MMMM D');
+      console.log(todayDate)
+
+      const productCost = {
+        sock: 10,
+        Tshirt : 8,
+        shippingCost : 5,
+      };
+
+      const totalProductCost = productCost.sock + 2 * productCost.Tshirt;
+
+      const finalCostWithShipping = totalProductCost + productCost.shippingCost;
+
+      console.log(totalProductCost);
+
+      const div = (
+        <div>
+          <p>Product Cost: ${totalProductCost}</p>
+          <p>Shipping cost: ${productCost.shippingCost}</p>
+          <p>Total cost with shipping : ${finalCostWithShipping}</p>
+
+          <button>Place your order</button>
+        </div>
+      );
+
+      
+
+      const container = document.querySelector('.js-container');
+      const root = ReactDOM.createRoot(container);
+
+      function renderTime(){
+        
+      }
+      
+      setInterval(()=>{
+        const time = dayjs().format('HH:mm:ss');
+        const div = (
+                      <div>
+                          <p>Current Time: {time}</p>
+                      </div>
+                    );
+                  root.render(div);
+      },1000);
+      
+
+      
+    </script>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Chatbot</title>
+    <style>
+      body{
+        font-family: Arial, Helvetica, sans-serif;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      .send-button {
+        background: rgb(25, 135, 84);
+        color: rgb(255, 255, 255);
+        padding: 12px 20px ;
+        border: none;
+        border-radius: 10px;
+        margin-left: 10px;
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      .chat-input-container {
+        display: flex;
+        height: auto;
+        margin-top: auto;
+        border-top: 1px solid #ccc;
+        padding-top: 10px;
+      }
+
+      .user-input {
+        padding: 12px 15px;
+        border-radius: 10px;
+        border-width: 1px;
+        font-size: 15px;
+        flex-grow: 1;
+        
+      }
+
+      .app-container {
+        max-width: 600px;
+        margin: auto;
+        height: 100vh;
+        display: flex;
+        justify-content: end;
+        flex-direction: column;
+      }
+
+      .chat-msg-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        flex: 1;
+        overflow-y: auto;
+        padding-bottom: 10px;
+      }
+
+      .chat-msg-user{
+        display: flex;
+        justify-content: end;
+        margin-top: 20px;
+      }
+
+      .chat-msg-robot{
+        display: flex;
+        justify-content: start;
+        margin-top: 20px;
+      }
+
+      .chat-msg-text{
+        background: rgb(238, 238, 238);
+        border-radius: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+        padding: 15px 20px;
+        font-size: 15px;
+        max-width: 300px;
+      }
+
+      .chat-msg-profile{
+        width: 45px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- React = external library that helps us create websites
+    1. React is an external library
+    2. React helps us create websites easier
+    -->
+    <div class="js-container"></div>
+    
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <!--Babel = JavasScript Compiler
+    = Translate other languages (JSX) into JS
+    JSX = Enhanced Version of js and stands for JS XML'
+
+    -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+    <script src="https://unpkg.com/dayjs/dayjs.min.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
+    <script type="text/babel">
+      //component name should always start with capital letter and it is a component and it is also known as PascalCase and it is always be reusable....
+      //props
+      function ChatInput({ onSend, isLoading }) {
+        const [text, setText] = React.useState('');
+
+        function handleSend() {
+          if (text.trim() === '' || isLoading) return;
+          onSend(text);
+          setText('');
+        }
+
+        return (
+          <div className="chat-input-container">
+            <input
+              type="text"
+              placeholder="Send a message to Chatbot"
+              size="30"
+              value={text} //controled input
+              onChange={(e) => setText(e.target.value)}
+              disabled = {isLoading}
+              className = "user-input"
+            />
+            <button 
+              onClick={handleSend} 
+              disabled ={isLoading} 
+              className="send-button">
+              {isLoading? 'Loading....':'Send'}  
+            </button>
+          </div>
+        );
+      }
+
+      //props helps us to re-use the code and acess the attributes
+      /*function ChatMessage(props){
+      destructuring
+        const {sender} = props;
+        const {message} = props;
+
+        if(sender === 'robot')
+          return (
+            <div>
+              <img src="/assets/robot.png" alt="" width="50"/>
+              {message}
+            </div>
+          );
+        else 
+          return (
+            <div>
+              {message}
+              <img src="/assets/user.png" alt="" width="50"/>
+            </div>
+          );  
+
+      }*/
+
+      //destructuring
+      function ChatMessage({message, sender}){
+        //const {message, sender} = props;
+        //guard operator
+        return (
+          <div className={
+            sender==='user'
+            ? 'chat-msg-user'
+            : 'chat-msg-robot'
+          }>
+            {sender === 'robot' && (
+              <img src="/assets/robot.png" alt="" className='chat-msg-profile'/>
+            )}
+            <div className='chat-msg-text'>
+              {message}
+            </div>
+            
+            {sender==='user' && (
+              <img src="/assets/user.png" alt="" className='chat-msg-profile'/>
+            )}
+          </div>
+        );
+      }
+
+      function ChatMessages(){
+        const [chatMessages,setChatMessages] = React.useState([
+          {
+          message: 'hello Chatbot',
+          sender:'user',
+          id:'id1'
+          },{
+            message: 'Hello! How can I help you?',
+            sender: 'robot',
+            id:'id2'
+          }
+        ]);
+        //updater function
+      const [isLoading, setIsLoading] = React.useState(false);
+
+      async function sendMessage(messageText){
+        setChatMessages((prev)=>[
+          ...prev,
+          {
+            message:messageText,
+            sender:'user',
+            id: crypto.randomUUID()
+          }//spread operator to copy the array
+        ]);
+
+        setIsLoading(true);
+
+        setChatMessages((prev)=>[
+            ...prev,
+            {
+              message: 'Loading...',
+              sender: 'robot',
+              id: 'loading'
+            }
+        ]);
+          
+        try {
+          const response = await Chatbot.getResponseAsync(messageText);
+
+          setChatMessages((prev) =>
+            prev
+              .filter((msg) => msg.id !== 'loading')
+              .concat({
+                  message: response,
+                  sender: 'robot',
+                  id: crypto.randomUUID(),
+              })
+          );
+        } catch (error) {
+            setChatMessages((prev) =>
+              prev
+                .filter((msg) => msg.id !== 'loading')
+                .concat({
+                  message: 'Error: Failed to fetch response. Please try again.',
+                  sender: 'robot',
+                  id: crypto.randomUUID(),
+                })
+            );
+          }
+        setIsLoading(false);
+      }
+      //shortform for return is ()
+      return (
+          <div className="chat-msg-container">
+            
+            {chatMessages.map((chatMessage) => (
+              <ChatMessage
+                key={chatMessage.id}
+                message={chatMessage.message}
+                sender={chatMessage.sender}
+                
+              />
+              
+            ))}
+            <ChatInput onSend={sendMessage} isLoading = {isLoading}/>
+          </div>
+        );
+    }
+
+      //component syntax ans it is also means a new element tag which is known as component
+
+      //app component
+      function App(){
+        return (
+          <div className='app-container'>
+            <ChatMessages />
+          </div>
+        );
+      }
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+      
+    </script>
+  </body>
+</html>
+
+<!-- state -->
+<!-- naming convention chatMessages = {chatMEssages}   -->
